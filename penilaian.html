@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tambah Karyawan</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: url('nilai.jpg') no-repeat center center fixed;
+      background-size: cover;
+    }
+    .container {
+      max-width: 500px;
+      margin: 50px auto;
+      background: #fff;
+      padding: 20px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+    }
+    form label {
+      display: block;
+      margin: 15px 0 5px;
+    }
+    form input, form select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+    form button {
+      width: 100%;
+      padding: 10px;
+      background: #5cb85c;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    form button:hover {
+      background: #4cae4c;
+    }
+    /* Hero Section Styles */
+    .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 20px;
+        }
+        .hero h1 {
+            font-size: 50px;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 10px rgb(255, 251, 251);
+        }
+        .hero p {
+            font-size: 20px;
+            margin-bottom: 30px;
+            max-width: 600px;
+            line-height: 1.6;
+            text-shadow: 2px 2px 10px rgb(255, 251, 251);
+        }
+        .hero a {
+            text-decoration: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .hero a:hover {
+            background-color: #218838;
+        }
+
+        /* Footer Styles */
+        footer {
+            text-align: center;
+            padding: 10px 20px;
+            background: rgba(0, 0, 0, 0.7);
+            color: #fff;
+            font-size: 14px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h3>Penilaian Karyawan</h3>
+    <form id="evaluationForm">
+      <label for="employee">Pilih Karyawan</label>
+      <select id="employee" required>
+        <option value="" disabled selected>Pilih karyawan...</option>
+      </select>
+
+      <h4>Kriteria (Nilai 1-10):</h4>
+      <div id="criteriaContainer">
+        <input type="number" min="1" max="10" placeholder="Kehadiran" class="criteria" required>
+        <input type="number" min="1" max="10" placeholder="Kedisiplinan" class="criteria" required>
+        <input type="number" min="1" max="10" placeholder="Inisiatif" class="criteria" required>
+        <input type="number" min="1" max="10" placeholder="Komunikasi" class="criteria" required>
+        <input type="number" min="1" max="10" placeholder="Kualitas Kerja" class="criteria" required>
+      </div>
+
+      <button type="submit">Simpan Penilaian</button>
+      <br><br>
+      <button type="button" onclick="window.location.href='home.html'">Kembali ke Home</button>
+    </form>
+  </div>
+
+  <script>
+    // Simulasi data karyawan yang sudah terdaftar
+    const employeeData = JSON.parse(localStorage.getItem('employeeData')) || [];
+
+    // Memuat daftar karyawan ke dalam select
+    const employeeSelect = document.getElementById('employee');
+    employeeData.forEach((employee, index) => {
+      const option = document.createElement('option');
+      option.value = index; // Menggunakan indeks sebagai ID unik
+      option.textContent = `${employee.nik} - ${employee.name} (${employee.division})`;
+      employeeSelect.appendChild(option);
+    });
+
+    // Simpan penilaian
+    document.getElementById('evaluationForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const selectedEmployeeIndex = employeeSelect.value;
+      const criteriaInputs = document.querySelectorAll('.criteria');
+      const criteria = Array.from(criteriaInputs).map(input => parseFloat(input.value));
+
+      if (selectedEmployeeIndex === '' || criteria.some(isNaN)) {
+        alert('Harap isi semua field dengan benar!');
+        return;
+      }
+
+      // Simpan penilaian ke data karyawan yang dipilih
+      employeeData[selectedEmployeeIndex].criteria = criteria;
+      localStorage.setItem('employeeData', JSON.stringify(employeeData));
+
+      alert(`Penilaian untuk ${employeeData[selectedEmployeeIndex].name} berhasil disimpan!`);
+      this.reset();
+    });
+  </script>
+  <div class="hero">
+    <h1>🏆 SIPETIK (Sistem Pemilihan Pegawai Terbaik)</h1>
+    <p>
+        Sistem ini dirancang untuk memilih Pegawai terbaik dengan adil dan transparan. 
+        Berdasarkan evaluasi kriteria yang telah ditentukan, kami memastikan hasil yang akurat.
+    </p>
+        </div>
+
+<!-- Footer -->
+<footer>
+    &copy; 2024 Pemilihan Pegawai Terbaik | Dikembangkan oleh Universitas Negeri Medan
+</footer>
+</body>
+</html>

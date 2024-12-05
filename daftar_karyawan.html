@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daftar Pegawai</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: url('56305.jpg.jpg') no-repeat center center fixed;
+      background-size: cover;
+    }
+    table {
+      width: 80%;
+      margin: 50px auto;
+      border-collapse: collapse;
+      text-align: left;
+      background: #ffffff50;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    table th, table td {
+      padding: 15px;
+      border: 1px solid #ddd;
+      text-align: center;
+    }
+    table th {
+      background: #5cb85c;
+      color: white;
+    }
+    button {
+      margin: 20px auto;
+      display: block;
+      padding: 10px 20px;
+      background: #5cb85c;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #3e8e41;
+    }
+    .action-buttons button {
+      padding: 5px 10px;
+      font-size: 14px;
+      margin: 0 5px;
+      border-radius: 3px;
+    }
+    .delete {
+      background: #d9534f;
+      color: white;
+    }
+    .delete:hover {
+      background: #c9302c;
+    }
+    .edit {
+      background: #5bc0de;
+      color: white;
+    }
+    .edit:hover {
+      background: #31b0d5;
+    }
+    /* Hero Section Styles */
+    .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 20px;
+        }
+        .hero h1 {
+            font-size: 50px;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 10px rgb(255, 251, 251);
+        }
+        .hero p {
+            font-size: 20px;
+            margin-bottom: 30px;
+            max-width: 600px;
+            line-height: 1.6;
+            text-shadow: 2px 2px 10px rgb(255, 251, 251);
+        }
+        .hero a {
+            text-decoration: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .hero a:hover {
+            background-color: #218838;
+        }
+
+        /* Footer Styles */
+        footer {
+            text-align: center;
+            padding: 10px 20px;
+            background: rgba(0, 0, 0, 0.7);
+            color: #fff;
+            font-size: 14px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+  </style>
+</head>
+<body>
+  <table>
+    <thead>
+      <tr>
+        <th>NIK Pegawai</th>
+        <th>Nama Pegawai</th>
+        <th>Divisi Pegawai</th>
+        <th>Kriteria</th>
+        <th>Aksi</th>
+      </tr>
+    </thead>
+    <tbody id="employeeTable"></tbody>
+  </table>
+  <button onclick="window.location.href='home.html'">Kembali ke Home</button>
+
+  <!-- Modal for Editing -->
+  <div id="editModal" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); border-radius: 8px;">
+    <h3>Edit Data Pegawai</h3>
+    <form id="editForm">
+      <label for="editNik">Nik Pegawai:</label>
+      <input type="text" id="editNik" required>
+      <br>
+      <label for="editName">Nama Pegawai:</label>
+      <input type="text" id="editName" required>
+      <br>
+      <label for="editDewisi">Devisi:</label>
+      <input type="text" id="editdevisi" required>
+      <br>
+      <label>Kriteria:</label>
+      <div id="editCriteriaContainer"></div>
+      <br>
+      <button type="submit">Simpan Perubahan</button>
+      <br>
+      <button type="button" onclick="closeEditModal()">Batal</button>
+    </form>
+  </div>
+
+  <script>
+    const employeeData = JSON.parse(localStorage.getItem('employeeData')) || [];
+    const tableBody = document.getElementById('employeeTable');
+    let editIndex = null;
+
+    function renderTable() {
+      tableBody.innerHTML = '';
+      employeeData.forEach((employee, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${employee.nik}</td>
+          <td>${employee.name}</td>
+           <td>${employee.division}</td>
+            <td>${employee.criteria.join(', ')}</td>
+          <td class="action-buttons">
+            <button class="edit" onclick="editEmployee(${index})">Edit</button>
+            <button class="delete" onclick="deleteEmployee(${index})">Hapus</button>
+          </td>
+        `;
+        tableBody.appendChild(row);
+      });
+    }
+
+    function deleteEmployee(index) {
+      if (confirm('Apakah Anda yakin ingin menghapus karyawan ini?')) {
+        employeeData.splice(index, 1);
+        localStorage.setItem('employeeData', JSON.stringify(employeeData));
+        renderTable();
+      }
+    }
+
+    function editEmployee(index) {
+      editIndex = index;
+      const employee = employeeData[index];
+
+      document.getElementById('editNik').value = employee.name;
+      document.getElementById('editName').value = employee.name;
+      document.getElementById('editdevisi').value = employee.name;
+
+      const editCriteriaContainer = document.getElementById('editCriteriaContainer');
+      editCriteriaContainer.innerHTML = '';
+      employee.criteria.forEach((value, i) => {
+        const input = document.createElement('input');
+        input.type = 'number';
+        input.min = 1;
+        input.max = 10;
+        input.value = value;
+        input.placeholder = `Kriteria ${i + 1}`;
+        input.className = 'criteria';
+        editCriteriaContainer.appendChild(input);
+      });
+
+      document.getElementById('editModal').style.display = 'block';
+    }
+
+    function closeEditModal() {
+      document.getElementById('editModal').style.display = 'none';
+    }
+
+    document.getElementById('editForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const name = document.getElementById('editName').value;
+      const criteriaInputs = document.querySelectorAll('#editCriteriaContainer .criteria');
+      const criteria = Array.from(criteriaInputs).map(input => parseFloat(input.value));
+
+      if (!name || criteria.some(isNaN)) {
+        alert('Semua field harus diisi!');
+        return;
+      }
+
+      employeeData[editIndex] = { name, criteria };
+      localStorage.setItem('employeeData', JSON.stringify(employeeData));
+      renderTable();
+      closeEditModal();
+    });
+
+    renderTable();
+  </script>
+  <div class="hero">
+    <h1>🏆 SIPETIK (Sistem Pemilihan Pegawai Terbaik)</h1>
+    <p>
+        Sistem ini dirancang untuk memilih Pegawai terbaik dengan adil dan transparan. 
+        Berdasarkan evaluasi kriteria yang telah ditentukan, kami memastikan hasil yang akurat.
+    </p>
+        </div>
+
+<!-- Footer -->
+<footer>
+    &copy; 2024 Pemilihan Pegawai Terbaik | Dikembangkan oleh Universitas Negeri Medan
+</footer>
+</body>
+</html>

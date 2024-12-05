@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hasil Ranking</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background:url(poto.jpg) ;
+      background-repeat: no-repeat;
+      background-size: cover;
+      color: #333;
+      margin: 0;
+    }
+    .container {
+      max-width: 800px;
+      margin: 50px auto;
+      background: #fff;
+      padding: 20px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    header {
+      display: flex;
+      justify-content: flex-end;
+      padding: 10px 20px;
+      background: #007bff;
+      color: white;
+    }
+    header button {
+      background-color: #f44336;
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    header button:hover {
+      background-color: #d32f2f;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    table th,
+    table td {
+      border: 1px solid #ccc;
+      padding: 10px;
+      text-align: left;
+    }
+    table th {
+      background-color: #f9f9f9;
+    }
+    .congratulations {
+      background-color: #dff0d8;
+      color: #3c763d;
+      padding: 15px;
+      margin: 20px 0;
+      border: 1px solid #d6e9c6;
+      border-radius: 5px;
+      text-align: center;
+    }
+    /* Hero Section Styles */
+    .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 20px;
+        }
+        .hero h1 {
+            font-size: 50px;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 10px rgb(255, 251, 251);
+        }
+        .hero p {
+            font-size: 20px;
+            margin-bottom: 30px;
+            max-width: 600px;
+            line-height: 1.6;
+            text-shadow: 2px 2px 10px rgb(255, 251, 251);
+        }
+        .hero a {
+            text-decoration: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .hero a:hover {
+            background-color: #218838;
+        }
+
+        /* Footer Styles */
+        footer {
+            text-align: center;
+            padding: 10px 20px;
+            background: rgba(0, 0, 0, 0.7);
+            color: #fff;
+            font-size: 14px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+  </style>
+</head>
+<body>
+  <header>
+    <button id="logoutButton">Logout</button>
+  </header>
+  <div class="container">
+    <h2>Hasil Ranking</h2>
+    <button id="rankButton">Hitung Ranking</button>
+    <div id="congratulationsMessage" class="congratulations" style="display: none;"></div>
+    <table id="rankTable">
+      <thead>
+        <tr>
+          <th>Peringkat</th>
+          <th>Nama</th>
+          <th>Skor</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <script>
+    const criteriaWeights = [0.15, 0.12, 0.10, 0.12, 0.10, 0.12, 0.10, 0.10, 0.05, 0.04];
+    const employeeData = JSON.parse(localStorage.getItem('employeeData')) || [];
+
+    document.getElementById('rankButton').addEventListener('click', function () {
+      const rankedEmployees = calculateAHP(employeeData);
+      renderRankingTable(rankedEmployees);
+
+      if (rankedEmployees.length > 0) {
+        const winner = rankedEmployees[0];
+        showCongratulationsMessage(winner.name, winner.score);
+      }
+    });
+
+    function calculateAHP(data) {
+      return data
+        .map(employee => {
+          const score = employee.criteria.reduce((total, value, index) => {
+            return total + value * criteriaWeights[index];
+          }, 0);
+          return { name: employee.name, score };
+        })
+        .sort((a, b) => b.score - a.score);
+    }
+
+    function renderRankingTable(rankedEmployees) {
+      const rankTableBody = document.querySelector('#rankTable tbody');
+      rankTableBody.innerHTML = '';
+      rankedEmployees.forEach((employee, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${index + 1}</td>
+          <td>${employee.name}</td>
+          <td>${employee.score.toFixed(2)}</td>
+        `;
+        rankTableBody.appendChild(row);
+      });
+    }
+
+    function showCongratulationsMessage(name, score) {
+      const messageDiv = document.getElementById('congratulationsMessage');
+      messageDiv.style.display = 'block';
+      messageDiv.textContent = `Selamat kepada ${name} atas pencapaian skor tertinggi sebesar ${score.toFixed(2)}! Anda berhasil menjadi peringkat pertama! 🎉`;
+    }
+
+    // Logout functionality
+    document.getElementById('logoutButton').addEventListener('click', function () {
+      localStorage.removeItem('employeeData'); // Menghapus data
+      alert('Anda telah logout.');
+      window.location.href = 'index.html'; // Arahkan ke halaman login
+    });
+  </script>
+  <div class="hero">
+    <h1>🏆 SIPETIK (Sistem Pemilihan Pegawai Terbaik)</h1>
+    <p>
+        Sistem ini dirancang untuk memilih Pegawai terbaik dengan adil dan transparan. 
+        Berdasarkan evaluasi kriteria yang telah ditentukan, kami memastikan hasil yang akurat.
+    </p>
+        </div>
+
+<!-- Footer -->
+<footer>
+    &copy; 2024 Pemilihan Pegawai Terbaik | Dikembangkan oleh Universitas Negeri Medan
+</footer>
+</body>
+</html>

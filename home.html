@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Halaman Utama</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* Global Styles */
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(to bottom, #6a11cb, #2575fc);
+      height: 100vh;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    /* Centered Container */
+    .container {
+      text-align: center;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 40px;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      width: 90%;
+      max-width: 600px;
+      position: relative;
+    }
+
+    /* Title */
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+    }
+
+    /* Paragraph */
+    p {
+      font-size: 1.2rem;
+      margin-bottom: 30px;
+    }
+
+    /* Buttons */
+    .menu-button {
+      display: block;
+      margin: 10px auto;
+      padding: 15px 25px;
+      font-size: 1.2rem;
+      color: #fff;
+      background: rgba(0, 0, 0, 0.3);
+      border: 2px solid #fff;
+      border-radius: 10px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.3s ease-in-out;
+      text-align: center;
+      width: 70%;
+    }
+
+    .menu-button:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-3px);
+    }
+
+    .menu-button:active {
+      transform: translateY(0);
+      box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Images */
+    .background-image {
+      position: absolute;
+      z-index: -1;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: brightness(0.4) blur(2px);
+    }
+
+    .logo {
+      width: 100px;
+      margin: 20px auto;
+    }
+
+    /* Floating Elements */
+    .animated-item {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      animation: float 8s infinite ease-in-out;
+    }
+
+    .animated-item:nth-child(1) {
+      width: 150px;
+      height: 150px;
+      top: 20%;
+      left: 10%;
+    }
+
+    .animated-item:nth-child(2) {
+      width: 200px;
+      height: 200px;
+      bottom: 10%;
+      right: 15%;
+    }
+
+    .animated-item:nth-child(3) {
+      width: 120px;
+      height: 120px;
+      top: 50%;
+      left: 5%;
+    }
+
+    .animated-item:nth-child(4) {
+      width: 100px;
+      height: 100px;
+      bottom: 25%;
+      right: 5%;
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0) rotate(0deg);
+      }
+      50% {
+        transform: translateY(-20px) rotate(45deg);
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Background Image -->
+  <img src="unimed.pgn.jpg" alt="Kampus Unimed" class="background-image">
+
+  <!-- Floating Elements -->
+  <div class="animated-item"></div>
+  <div class="animated-item"></div>
+  <div class="animated-item"></div>
+  <div class="animated-item"></div>
+
+  <!-- Main Content -->
+  <div class="container">
+    <img src="logo.png" alt="Logo Unimed" class="logo">
+    <h1> SIPETIK 🏆!</h1>
+    <p>Pilih menu berikut untuk melanjutkan.</p>
+    <a href="mengelola.html" class="menu-button">Mengelola Data</a>
+    <a href="penilaian.html" class="menu-button">Penilaian</a>
+    <a href="daftar_karyawan.html" class="menu-button">Daftar Karyawan</a>
+    <a href="hasil_ranking.html"   class="menu-button">Hasil Ranking</a>
+  </div>
+</body>
+</html>
