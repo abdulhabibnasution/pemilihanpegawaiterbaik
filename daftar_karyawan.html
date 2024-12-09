@@ -62,13 +62,13 @@
     }
     /* Hero Section Styles */
     .hero {
-            height: 100vh;
+      height: 50vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             text-align: center;
-            background: rgba(0, 0, 0, 0.6);
+            background: rgb(132, 164, 139);
             padding: 20px;
         }
         .hero h1 {
@@ -136,8 +136,8 @@
       <label for="editName">Nama Pegawai:</label>
       <input type="text" id="editName" required>
       <br>
-      <label for="editDewisi">Devisi:</label>
-      <input type="text" id="editdevisi" required>
+      <label for="editDevisi">Devisi:</label>
+      <input type="text" id="editDevisi" required>
       <br>
       <label>Kriteria:</label>
       <div id="editCriteriaContainer"></div>
@@ -149,83 +149,94 @@
   </div>
 
   <script>
-    const employeeData = JSON.parse(localStorage.getItem('employeeData')) || [];
-    const tableBody = document.getElementById('employeeTable');
-    let editIndex = null;
+  
+  const employeeData = JSON.parse(localStorage.getItem('employeeData')) || [];
+  const tableBody = document.getElementById('employeeTable');
+  let editIndex = null;
 
-    function renderTable() {
-      tableBody.innerHTML = '';
-      employeeData.forEach((employee, index) => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td>${employee.nik}</td>
-          <td>${employee.name}</td>
-           <td>${employee.division}</td>
-            <td>${employee.criteria.join(', ')}</td>
-          <td class="action-buttons">
-            <button class="edit" onclick="editEmployee(${index})">Edit</button>
-            <button class="delete" onclick="deleteEmployee(${index})">Hapus</button>
-          </td>
-        `;
-        tableBody.appendChild(row);
-      });
-    }
+  function renderTable() {
+    tableBody.innerHTML = '';
+    employeeData.forEach((employee, index) => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>${employee.nik}</td>
+        <td>${employee.name}</td>
+        <td>${employee.division}</td>
+        <td>${employee.criteria.join(', ')}</td>
+        <td class="action-buttons">
+          <button class="edit" onclick="editEmployee(${index})">Edit</button>
+          <button class="delete" onclick="deleteEmployee(${index})">Hapus</button>
+        </td>
+      `;
+      tableBody.appendChild(row);
+    });
+  }
 
-    function deleteEmployee(index) {
-      if (confirm('Apakah Anda yakin ingin menghapus karyawan ini?')) {
-        employeeData.splice(index, 1);
-        localStorage.setItem('employeeData', JSON.stringify(employeeData));
-        renderTable();
-      }
-    }
-
-    function editEmployee(index) {
-      editIndex = index;
-      const employee = employeeData[index];
-
-      document.getElementById('editNik').value = employee.name;
-      document.getElementById('editName').value = employee.name;
-      document.getElementById('editdevisi').value = employee.name;
-
-      const editCriteriaContainer = document.getElementById('editCriteriaContainer');
-      editCriteriaContainer.innerHTML = '';
-      employee.criteria.forEach((value, i) => {
-        const input = document.createElement('input');
-        input.type = 'number';
-        input.min = 1;
-        input.max = 10;
-        input.value = value;
-        input.placeholder = `Kriteria ${i + 1}`;
-        input.className = 'criteria';
-        editCriteriaContainer.appendChild(input);
-      });
-
-      document.getElementById('editModal').style.display = 'block';
-    }
-
-    function closeEditModal() {
-      document.getElementById('editModal').style.display = 'none';
-    }
-
-    document.getElementById('editForm').addEventListener('submit', function (e) {
-      e.preventDefault();
-
-      const name = document.getElementById('editName').value;
-      const criteriaInputs = document.querySelectorAll('#editCriteriaContainer .criteria');
-      const criteria = Array.from(criteriaInputs).map(input => parseFloat(input.value));
-
-      if (!name || criteria.some(isNaN)) {
-        alert('Semua field harus diisi!');
-        return;
-      }
-
-      employeeData[editIndex] = { name, criteria };
+  function deleteEmployee(index) {
+    if (confirm('Apakah Anda yakin ingin menghapus karyawan ini?')) {
+      employeeData.splice(index, 1);
       localStorage.setItem('employeeData', JSON.stringify(employeeData));
       renderTable();
-      closeEditModal();
+    }
+  }
+
+  function editEmployee(index) {
+    editIndex = index;
+    const employee = employeeData[index];
+
+    document.getElementById('editNik').value = employee.nik;
+    document.getElementById('editName').value = employee.name;
+    document.getElementById('editDevisi').value = employee.division;
+
+    const editCriteriaContainer = document.getElementById('editCriteriaContainer');
+    editCriteriaContainer.innerHTML = '';
+    employee.criteria.forEach((value, i) => {
+      const input = document.createElement('input');
+      input.type = 'number';
+      input.min = 1;
+      input.max = 10;
+      input.value = value;
+      input.placeholder = `Kriteria ${i + 1}`;
+      input.className = 'criteria';
+      editCriteriaContainer.appendChild(input);
     });
 
+    document.getElementById('editModal').style.display = 'block';
+  }
+
+  function closeEditModal() {
+    document.getElementById('editModal').style.display = 'none';
+  }
+
+  document.getElementById('editForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    const nik = document.getElementById('editNik').value;
+    const name = document.getElementById('editName').value;
+    const division = document.getElementById('editDevisi').value;
+    const criteriaInputs = document.querySelectorAll('#editCriteriaContainer .criteria');
+    const criteria = Array.from(criteriaInputs).map(input => parseFloat(input.value));
+
+    if (!nik || !name || !division || criteria.some(isNaN)) {
+      alert('Semua field harus diisi dengan benar!');
+      return;
+    }
+
+    employeeData[editIndex] = { 
+      nik, 
+      name, 
+      division, 
+      criteria 
+    };
+
+    localStorage.setItem('employeeData', JSON.stringify(employeeData));
     renderTable();
+    closeEditModal();
+  });
+
+  renderTable();
+</script>
+
   </script>
   <div class="hero">
     <h1>🏆 SIPETIK (Sistem Pemilihan Pegawai Terbaik)</h1>
